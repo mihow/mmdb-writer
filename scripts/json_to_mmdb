@@ -15,17 +15,14 @@ my $outfile = '/data/example.mmdb';
 # See https://metacpan.org/pod/MaxMind::DB::Writer::Tree#DATA-TYPES
 
 my %types = (
-    id           => 'uint32',
-    name         => 'utf8_string',
     service_area => 'utf8_string',
-    address      => 'utf8_string',
 );
 
 my $tree = MaxMind::DB::Writer::Tree->new(
 
     # "database_type" is some arbitrary string describing the database.  At
     # MaxMind we use strings like 'GeoIP2-City', 'GeoIP2-Country', etc.
-    database_type => 'My-IP-Data',
+    database_type => 'GeoIP4-ServiceArea',
 
     # "description" is a hashref where the keys are language names and the
     # values are descriptions of the database in that language.
@@ -70,14 +67,13 @@ my $json_text = do {
 my $json = JSON->new;
 my $data = $json->decode($json_text);
 
-my $aref = $data->{records};
-for my $element (@$aref) {
+for my $key (keys %$data) {
 
     # Create one network and insert it into our database
-    my $network = Net::Works::Network->new_from_string( string => $element->{address});
-    say "$element->{address}";
+    my $network = Net::Works::Network->new_from_string( string => $key);
+    say "${key} => $data->{$key}{'service_area'}";
 
-    $tree->insert_network( $network, $element );
+    $tree->insert_network( $key, $data->{$key});
 }
 
 # Write the database to disk.
