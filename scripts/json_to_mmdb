@@ -25,15 +25,15 @@ my $tree = MaxMind::DB::Writer::Tree->new(
 
     # "database_type" is some arbitrary string describing the database.  At
     # MaxMind we use strings like 'GeoIP2-City', 'GeoIP2-Country', etc.
-    database_type => 'My-IP-Data',
+    database_type => 'OneMedicalServiceAreaIPs',
 
     # "description" is a hashref where the keys are language names and the
     # values are descriptions of the database in that language.
     description =>
-        { en => 'My database of IP data', fr => q{Mon Data d'IP}, },
+        { en => 'Database of IPs in One Medical service areas', },
 
     # "ip_version" can be either 4 or 6
-    ip_version => 4,
+    ip_version => 6,
 
     # add a callback to validate data going in to the database
     map_key_type_callback => sub { $types{ $_[0] } },
